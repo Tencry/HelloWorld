@@ -1,0 +1,89 @@
+$ vi Hello.java
+[i]nput:
+class HelloWorld {
+    public static void Main(String[] args)
+    {
+        System.out.println("Hello World!\n");
+    }
+}
+:wq
+
+$ ls
+Hello.java
+
+$ javac Hello.java
+
+$ ls
+Hello.java HelloWorld.class
+
+$ java HelloWorld
+Error: Main method not found in class HelloWorld, please define the main method as:
+   public static void main(String[] args)
+or a JavaFX application class must extend javafx.application.Application
+
+$ vi Hello.java
+:2 Shift + [R]eplace: 
+public static void main(String[] args)
+Esc
+:wq
+
+$ javac Hello.java
+
+$ java HelloWorld
+Hello World!
+
+$ vi Hello.java
+:1 Shift + O (prepend newline)
+package pro.arman.hello;
+Esc
+:wq
+
+$ javac Hello.java
+
+$ java HelloWorld
+Error: Could not find or load main class HelloWorld
+Caused by: java.lang.NoClassDefFoundError: pro/arman/hello/HelloWorld (wrong name: HelloWorld)
+
+$ java pro.arman.hello.HelloWorld
+Error: Could not find or load main class pro.arman.hello.HelloWorld
+Caused by: java.lang.ClassNotFoundException: pro.arman.hello.HelloWorld
+
+$ mkdir -p pro/arman/hello && mv HelloWorld.class pro/arman/hello
+
+$ ls
+Hello.java pro/
+
+$ java pro.arman.hello.HelloWorld
+Hello World!
+
+$ java pro/arman/hello/HelloWorld
+Hello World!
+
+$ rm -r pro/
+
+$ ls
+Hello.java
+
+$ javac -d classes Hello.java
+
+$ ls
+classes/ Hello.java
+
+$ cd classes/
+
+$ vi manifest.txt
+[i]nput: 
+Main-Class: pro.arman.hello.HelloWorld\n
+
+:wq
+
+
+$ jar -cvmf manifest.txt ../hello.jar pro/
+
+$cd -
+
+$ ls
+classes/ hello.jar Hello.java
+
+$ java -jar hello.jar
+Hello World!
